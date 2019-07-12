@@ -1,0 +1,50 @@
+编辑环境变量  vim /etc/profile        重新载入    source /etc/profile
+
+Notice:      网络配置中遇到的问题, VMaware 中的 Nate 模式的网关设置 要和 Linux 的eth0的网卡设置文件的网关
+Notice:      设置一样, 不然会出现无法上网.
+查看物理地址  vim /etc/udev/rules.d/70-persistent-net.rules
+修改网络配置  vim /etc/sysconfig/network-scripts/ifcfg-eth0
+重启网络服务  service network restart(如果无反应, 可以用 service NetworkManager restart 替代).
+
+###########################  Service network restart  无反应解决 ##################################
+如果  rules  文件出现了多个网卡信息, 不知道虚拟机使用了哪个网卡, 把这个文件删除, 重启便只会有一行了, 然后把其改为 eth0, 复制物理地址到 ifcfg-eth0 的配置文件中.
+在 ifcfg-eth0 的配置文件中删除 UUID(如果报错的话,删除无大碍), 添加静态 IP 什么的.
+其实重启  NetworkManager  静态 IP 已经生效了, 当然重启 NetworkManager 后,  service network restart 也会有反应了, 但是关机重启后又冲突了(不影响使用).
+
+
+Notice: SSH 免密登录
+在 .ssh 目录下输入如下命令然后回车四次
+ssh-keygen -t rsa
+使用  ssh-copy-id  hostName   命令把生成的公钥复制到需要免密登录的服务器上
+配置了免密的服务器注意要把公钥复制给自己一份, 免密登录自己.
+
+
+Notice: 集群时间同步
+1:查看是否安装了  ntp  服务,  选择一台服务器作为时间同步的服务器.
+    rpm -qa | grep ntp
+2: 修改ntp.conf配置文件（/etc/ntp.conf）
+    取消注释   restrict  192.168 ........   开头的注释.
+3: 注释官方提供的时间服务.
+4: 添加默认内部时间数据.
+
+
+
+Notice: eth0 网卡配置文件
+DEVICE="eth0" #网卡名
+BOOTPROTO="static" # 启动类型
+HWADDR="00:0c:29:0e:75:9c"
+NM_CONTROLLED="yes"
+ONBOOT="no"  # 是否开启启动
+TYPE="Ethernet"
+UUID="b57bd770-6e99-42bb-8998-f3903f84e102"
+
+IPADDR=192.168.1.101
+GATEWAY=192.168.1.2
+DNS1=192.168.1.2
+
+
+Notice: Host 文件设置
+192.168.1.132 hadoop2-host
+192.168.1.133 hadoop3-host
+192.168.1.134 hadoop4-host
+

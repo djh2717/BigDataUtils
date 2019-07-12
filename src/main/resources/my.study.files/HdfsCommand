@@ -1,0 +1,35 @@
+
+hdfs dfs -mkdir -p  /dir    创建目录
+
+hdfs dfs -put localFile  /hdfsDir     Put文件到HDFS
+
+hdfs dfs -rm -rf   /hdfsDir     删除文件
+
+hdfs dfs -cat /hdfsFile     查看文件
+
+hdfs fsck / -files -blocks  查看文件由哪些块组成
+
+
+以 hadoop 开头的:  hadoop fs 和 hdfs dfs 之间的关系为, hadoop fs 底层是用 hdfs dfs 来实现的
+hadoop fs       命令大全
+
+hadoop fs -help  command        查看命令帮助
+
+hadoop fs -ls /     查看目录
+
+hadoop fs -mkdir -p  /dir   创建文件夹
+
+hadoop fs -moveFromLocal /local  /destination       剪切本地文件到 hdfs.
+
+hadoop fs -rm -r -f /dir        删除文件或目录
+
+hadoop fs -cp /dir /destination     在 hdfs 内复制
+
+hadoop fs -df -h /     查看文件系统可用空间信息
+
+hdfs oiv/oev -p XML -i镜像文件 -o 转换后文件输出路径        以 XML 格式查看 fsimage 或者 edit 文件.
+
+hdfs dfsadmin -safemode get/enter/leave/wait    查看/进入/离开/等待  安全模式
+
+Notice: 第一次格式化启动后, 如果后续又要格式化, 需要删除 NameNode 的 data(即配置的工作目录) 目录, 原因是版本信息不对应.
+

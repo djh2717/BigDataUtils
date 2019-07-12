@@ -1,0 +1,96 @@
+
+简述hadoop安装
+改IP，修改Host文件
+关闭防火墙
+装JDK配置环境变量
+装Hadoop配置环境变量
+修改hadoop的配置文件如core-site、mapred-site、yarn-site、dfs-site等
+namenode进行格式化
+start-all
+
+
+
+#JAVA_HOME
+export JAVA_HOME=/home/java/jdk1.8.0_171
+export PATH=$PATH:$JAVA_HOME/bin
+
+
+
+#HADOOP_HOME
+export HADOOP_HOME=/home/hadoop/hadoop-2.7.7
+export PATH=$PATH:$HADOOP_HOME/bin
+export PATH=$PATH:$HADOOP_HOME/sbin
+
+
+Notice: core-site
+<configuration>
+
+    <!--指定HDFS中NameNode的地址-->
+    <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://localhost:9000</value>
+    </property>
+
+    <!--指定hadoop运行产生文件（DataNode）的存储目录-->
+    <property>
+        <name>hadoop.tmp.dir</name>
+        <value>/home/hadoop/hadoop-2.7.7/data/tmp</value>
+    </property>
+
+</configuration>
+
+
+Notice: Yarn-site
+<configuration>
+
+    <!-- Site specific YARN configuration properties -->
+
+    <!-- reducer获取数据的方式 -->
+    <property>
+        <name>yarn.nodemanager.aux-services</name>
+        <value>mapreduce_shuffle</value>
+    </property>
+
+    <!-- 指定YARN的ResourceManager的地址 -->
+    <property>
+        <name>yarn.resourcemanager.hostname</name>
+        <value>hadoop3-host</value>
+    </property>
+
+</configuration>
+
+
+
+Notice: hdfs-site
+<configuration>
+
+    <!--配置节点数-->
+    <property>
+        <name>dfs.replication</name>
+        <value>3</value>
+    </property>
+
+    <!--配置Secondary NameNode-->
+    <property>
+        <name>dfs.namenode.secondary.http-address</name>
+        <value>hadoop4-host:50090</value>
+    </property>
+
+</configuration>
+
+
+Notice: mapred-site
+<configuration>
+
+    <!-- 指定mr运行在yarn上 -->
+    <property>
+        <name>mapreduce.framework.name</name>
+        <value>yarn</value>
+    </property>
+
+</configuration>
+
+
+Notice: 启动命令
+hdfs namenode -format
+hadoop-daemon.sh start namenode

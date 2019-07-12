@@ -1,0 +1,281 @@
+课程内容：hive
+1、数据仓库的基本概念  了解
+2、hive基本概念
+	hive的安装部署  搞定
+3、hive的基本操作 
+		建库建表操作    掌握 搞定   
+		hive的基本语法    掌握 搞定  
+		
+4、hive的shell参数 了解
+5、hive的函数  内置函数 了解
+			   自定义函数  自定义udf函数  搞定  
+6、hive的数据压缩  搞定
+
+
+7、hive的数据存储格式  搞定
+8、存储与压缩相结合  背下来  
+9、hive的调优
+
+10、hive语句的综合联系  作业
+
+
+
+数据仓库的基本介绍：
+1、数据仓库的基本概念 
+	名字叫做data  warehourse 数据仓库
+	仓库：主要用于存储东西的，不会生产东西，也不会消耗东西
+	数据仓库：不会产生任何的数据，也不会消耗任何的数据，只是用于存储这些数据
+			   主要用于分析性报告和决策支持
+	
+2、数据仓库的主要特征：
+	面向主题：有确切的分析目标
+	集成性：相关的数据都会弄到数据仓库当中来，便于我们下一步的分析
+	非易失性：数据一旦进入到数据仓库之后，不会轻易的改变
+	时变性：根据一些不同的指标求取，会产生不同的一些分析维度
+	
+3、数据库与数据仓库的区别：
+	数据库：OLTP  On-Line Transaction Processing  联机事务处理  主要用于我们业务数据库当中的增删改查
+	数据仓库 OLAP     On-Line Analytical Processing    联机分析处理  主要用于我们的数据的分析查询等操作，操作的都是历史数据，不会新增 也不会修改，更加不会删除数据
+	最基本的区别：数据仓库主要用于统计分析，数据库主要用于事务处理
+
+	kettle：来实现数据仓库的开发，主要是用于处理数据库当中的数据
+
+4、数据仓库的分层：数据仓库主要分为三层  
+				源数据层：贴源层  ODS层  主要是获取我们的源数据 
+				数据仓库层：DW层  主要对我们的贴源层的数据进一步的分析，得出我们想要的结果
+				数据应用层：APP层  主要对我们应用层分析之后得到的结果做进一步的展示
+	数据在各个层级之间流动的一个过程，可以称之为ETL过程  （抽取Extra, 转化Transfer, 装载Load）的过程
+	
+5、数据仓库的元数据管理：主要用于记录数据库表之间的关系，数据库表字段的含义等等
+						  还有包括一些数据处理的规则，数据装载的周期，数据导出的周期等等
+	
+	
+	
+hive的基本介绍：
+	1、hive是什么：基于hadoop的一个数据仓库的工具。可以hdfs上面结构化的数据映射成为一张表
+	
+	数据结构：
+		结构化的数据：字段个数一定，字段之间的分隔符一定
+		半结构化的数据：例如xml，json等
+		非结构化的数据：没有任何规律格式的数据
+
+	
+	hive底层的数据存储都是使用HDFS，数据的统计计算都是使用的MapReduce,
+	说白了可以将hive理解为一个MapReduce的客户端工具，你写的hql语句会翻译成MapReduce的任务去执行
+	
+	2、为什么要使用hive 写MR太复杂了，不会，sql相对简单一些
+	
+	3、hive一些特点：
+		可扩展：扩展的是我们的hadoop集群
+		延展性：支持用户的自定义函数
+		容错性：良好的容错
+	
+	hive的架构：
+		用户接口：主要是为了我们编辑sql语句，然后提交给hive
+		解析器：包含三大块：
+				编译器：主要将我们的sql语句进行编译成一个MR的任务
+				优化器：主要是对我们的sql语句进行优化
+				执行器：提交mr的任务，进行执行
+		元数据库：hive的元数据  表与hdfs数据之间的映射关系 默认使用的是derby，一般都会改成mysql
+	
+	
+	
+	
+Notice: 1
+hive的安装：使用mysql作为元数据存储
+			mysql使用yum源在线的方式进行安装
+			hive的配置文件的修改  
+				hive-env.sh:
+					HADOOP_HOME=/export/servers/hadoop-2.6.0-cdh5.14.0
+					export HIVE_CONF_DIR=/export/servers/hive-1.1.0-cdh5.14.0/conf
+					注意：一定要指向到我们hive的配置文件的路径
+	
+
+Notice: 2
+hive的交互方式：
+  第一种方式  bin/hive
+  第二种方式：使用beeline客户端来进行连接
+	启动服务端hiveserver2    
+		bin/hive --service hiveserver2  前台启动
+		nohup bin/hive --service hiveserver2 2>&1   &  进程后台启动
+	启动客户端，使用beeline的方式连接我们的服务端
+		bin/beeline
+		beeline> !connect jdbc:hive2://node03.hadoop.com:10000
+		输入用户名root   密码  123456即可连接上
+	
+  第三种交互方式：使用hive  -e不进入hive客户端直接执行sql语句
+		bin/hive -e "use myhive;select * from test;"
+		bin/hive -f hive.sql   通过 -f  指定我们需要执行的sql脚本文件
+
+
+Notice: 3
+hive的基本操作：
+	创建数据库与创建数据库表操作
+		创建数据库操作：create  database  if   not  exists  xxx;
+		创建数据库表的操作：
+			CREATE [EXTERNAL] TABLE [IF NOT EXISTS] table_name  创建表的三个关键字段
+			   [(col_name data_type [COMMENT col_comment], ...)]   定义我们的列名，以及列的类型
+			   [COMMENT table_comment]   注释信息，只能用英文或者拼音，不接受中文
+			   [PARTITIONED BY (col_name data_type [COMMENT col_comment], ...)]   分区：这里的是hive的分区，分的是文件夹
+			   [CLUSTERED BY (col_name, col_name, ...)    分桶：按照字段进行划分文件
+			   [SORTED BY (col_name [ASC|DESC], ...)] INTO num_buckets BUCKETS]   stored  by   划分到多少个桶里面去
+			   [ROW FORMAT row_format]    指定字段之间的分隔符
+			   [STORED AS file_format]    数据的存储格式为哪一种
+			   [LOCATION hdfs_path]       指定我们这个表在hdfs的哪一个位置
+
+			   
+	hive当中的第一种表模型：管理表 又叫做 内部表 
+			最明显的一个特征：删除表的时候，会把hdfs的数据同步删除
+		创建内部表的语法  create  table  stu (id int ,name string);  
+		注意创建内部表不要带external关键字
+		创建内部表：指定分隔符，指定文件存储格式，指定hdfs的存放位置
+		create table if not exists stu2(id int ,name string ) row format delimited fields terminated by '\t' stored as textfile location '/user/stu2';
+		根据查询结果创建表
+		create table stu3 as select * from stu2; 这种语法就会把我们stu2里面的数据以及表结构都复制到stu3里面来
+		复制表结构
+		create table stu4 like stu2;  只会把stu2的表结构复制给stu4 ,不会复制数据
+	
+	
+	hive当中的第二种表模型：外部表  外部表删表是不会删除数据的，创建外部表的关键字   external  
+		外部表的数据都是指定hdfs的文件路径加载进来的，外部表认为自己没有独享这份数据，所以删除外部表的时候，不会同步删除hdfs的数据
+		与内部表的特征针锋相对，删除表的时候，不会删除表数据
+		创建外部techer表，并且指定字段之间的分隔符
+			create external table techer(t_id string,t_name string) row format delimited fields terminated by '\t';
+		创建外部stduent表，并且指定字段之间的分隔符
+			create external table student(s_id string,s_name string ,s_birth string,s_sex string) row format delimited fields terminated by '\t';
+		加载数据到表当中去：load  data  [local]
+			从本地文件系统加载数据： load data local inpath '/export/servers/hivedatas/student.csv' into table student;  实质上就是把本地文件上传到外部表对应的文件夹下面去了
+			从hdfs文件系统加载数据： load data inpath '/hivedatas/techer.csv' into table techer;  实质上就是把hdfs的文件移动到表的文件夹下面去了
+	
+	hive当中的第三种表模型：分区表  就是分文件夹，可以按照时间，或者其他条件，创建一些文件夹
+		创建一个字段的分区表：关键词就是partitioned  by
+		 create table score(s_id string,c_id string,s_score int) partitioned by (month string) row format delimited fields terminated by '\t';
+		
+		创建一个多分区的字段
+	create table score2(s_id string,c_id string,s_score int) partitioned by (year string,month string ,day string) row format delimited fields terminated by '\t';
+	
+	
+		加载数据到分区表当中去： 从本地文件系统加载：load data local inpath '/export/servers/hivedatas/score.csv' into table score partition (month='201806');
+		加载数据到多分区表当中去：从本地文件系统加载 ：load data local inpath '/export/servers/hivedatas/score.csv' into table score2 partition(year='2018',month='06',day='01');
+		查看表分区：show  partitions  tableName
+		添加一个分区  alter  table   score  add partition(month='xxx')
+		删除分区：alter  table  score  drop partition(month='xxx')
+	
+	hive当中的第四种表模型：分桶表  就是分文件  与mr当中的分区类似
+		创建分桶表的语法 关键字：clustered  by  (col_name) into  xx  buckets  
+		create table course(c_id string,c_name string ,t_id string) clustered by (c_id) into 3 buckets row format delimited fields terminated by '\t';
+		分桶表当中不能直接通过load的方式加载数据，需要我们通过 insert  overwrite  table   course  select * from course_common  cluster  by  (c_id);
+		
+	
+	
+	实际工作当中，如果数据量实在比较大，可以通过分桶加分区的方式一起来创建表 可以考虑创建分区分桶表
+	
+	
+	
+	hive表当中加载数据：
+		load  data
+			通过load的方式加载数据  load data local inpath '/export/servers/hivedatas/score.csv' overwrite into table score partition(month='201806');
+
+		insert overwrite  select
+		 通过一张表，然后将查询结果插入到另外一张表里面去	insert overwrite table score4 partition(month='201802') select s_id ,c_id ,s_score from score;
+	
+		通过查询语句查询某张表，并且将数据弄到另外一张表里面去
+	
+	
+	
+	
+	
+	
+	hive的查询语法：
+		hive的group  by 操作  group by的字段要么与select后面的字段保持一致，要么select后面不要出现任何字段
+		hive的join操作：hive的join操作只支持等值连接，不支持非等值连接
+		
+
+	hive的配置文件说明：
+		1、全局配置 hive-site.xml  对所有的hive的任务都会生效
+		2、命令行的参数   bin/hive -hiveconf hive.root.logger=INFO,console  对当前会话有效
+		3、hive的参数声明  进入hive客户端以后通过 set 来进行设置一些参数 set  mapred.reduce.task=20; 对当前客户端有效
+
+
+	hive自带的函数查看：
+		 desc function extended upper;  查看函数的详细用法
+
+
+
+hive当中的数据存储格式：
+	行式存储：textFile  sequenceFile 都是行式存储
+	列式存储：orc   parquet   可以使我们的数据压缩的更小，压缩的更快
+
+	数据查询的时候尽量不要用select *  只选举我们需要的字段即可
+		
+		hive的数据存储格式：用的比较多的一中行式存储 ： textfile
+							 用的比较多的列式存储： orc  parquet
+							 其中orc底层有自带的一种压缩算法，会对数据进行压缩的比较厉害
+	
+		实际工作当中，很多时候，列式存储的数据格式都是选择orc或者paruet  压缩方式都是选择snappy
+
+===============================================================================================================================================		
+
+课程总结：
+1、数据仓库的基本概念：
+	数据仓库一般分为三层架构    理解
+		源数据层：贴源层  ODS层
+		数据仓库层： dw层 主要用于我们的各种数据分析统计
+		数据应用层：APP层  application 应用层，主要用于我们数据的报表展示等 
+
+2、hive的基本概念：理解  数据仓库的工具  ，既不会生产数据，也不会消费数据，数据从外部来，提供开放给外部用
+		数据存储：用的是hdfs
+		数据的计算：MapReduce   所以一定要启动hadoop集群
+
+	hive的安装：使用mysql作为元数据存储  搞定
+	
+3、hive的基本操作：建库语法  搞定
+			        建表语法： 搞定	
+						内部表：管理表  删表的时候会删除hdfs的数据
+						外部表： external  关键字创建外部表，删表的时候不会删除hdfs的数据
+						分区表：分文件夹  partitioned   by      
+						分桶表：分文件  clustered  by   into   xx  buckets 
+			修改表  删除表  了解
+						
+	hive当中数据的加载：
+		第一种加载数据的方式：load   data   local  
+		第二种加载数据的方式：  insert  overwritae  table   xx   select   xxx
+		
+
+4、hive的查询语法：group  by  语法要注意
+	select  xxx from  group  by xxx,abc
+
+5、hive的shell参数  了解
+	1、hive-site.xml  全局的配置
+	2、进入hive客户端之前的一些配置 -hiveconfi   
+	3、进入hive客户端以后的一些配置  set   xxx=xxx
+	
+6、hive的函数以及udf函数
+	尝试看看能不能自定义udf函数，解析json格式的数据
+	自定义函数的流程  最少要知道继承那个类 UDF  重写哪个方法  evaluate
+	
+7、hive的数据压缩： 搞定
+	map输出的数据进行压缩
+	reduce输出的数据进行压缩
+	常用的压缩方式：snappy
+
+8、hive的数据存储格式：
+		行式存储：TextFile,SequenceFile
+		列式存储：ORC  ,parquet
+		
+9、hive的压缩与存储相结合： 搞定
+		最常用的列式存储：ORC  parquet，压缩方式  snappy
+
+
+
+	
+
+		
+		
+		
+
+
+
+		
+		
+		

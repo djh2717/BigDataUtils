@@ -1,0 +1,3 @@
+全分布式启动脚本:
+start-dfs.sh
+start-yarn.sh

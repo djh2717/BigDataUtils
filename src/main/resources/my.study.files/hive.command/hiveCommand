@@ -1,0 +1,15 @@
+交互命令:
+  1.jdbc
+    启动hiveserver2服务端:
+    bin/hive --service hiveserver2  前台启动
+    nohup bin/hive --service hiveserver2 2>&1   &  进程后台启动
+    然后使用 beeline 连接: !connect jdbc:hive2://hadoop1-host:10000
+
+  2.直接使用 hive -e "SQL" 或者 hive -f fileName.sql 来执行命令或 SQL 文件.
+
+
+创建数据库: create database name;
+
+
+建表语句:
+  CREATE [EXTERNAL] TABLE [IF NOT EXISTS] table_name

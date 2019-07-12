@@ -1,0 +1,1 @@
+yarn-daemon.sh start resourcemanager        启动ResourceManager

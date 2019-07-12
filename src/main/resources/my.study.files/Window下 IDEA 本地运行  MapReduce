@@ -1,0 +1,25 @@
+第一步:
+去官网下载 tar.gz 压缩包, 可以用于 window.
+
+
+第二步:
+解压到一个目录, 配置 Hadoop 环境变量.    HADOOP_HOME=E:\下载文件\hadoop-2.7.7
+Path 里面追加:      %HADOOP_HOME%\bin       %HADOOP_HOME%\sbin
+cmd 测试 hadoop version.
+
+
+第三步:
+由于是 window 环境, 需要 hadoop.dll  和 winutils.exe 文件, 分别复制到 C:/window/system32   和 hadoop 的 bin 目录下.
+注: hadoop.dll  和  winutils.exe 文件可能下载不到对应的版本, 高版本可以兼容低版, 如安装的 2.7.7 的 hadoop, 可以下载 2.7.2 的 hadoop.dll, 亲测可成功.
+
+
+第四步:
+新建一个  Maven  工程,  pom 添加  hadoop-hdfs  hadoop-common  hadoop-client 三个依赖即可, 不要添加 hadoop-core, 版本太低, 会导致报错.
+
+
+PS:  网上有些教程说只需要下载  hadoop  相关 jar 包, 不需要配置和安装 hadoop, 就可以运行 MapReduce 程序,
+这样也是可以的, 就是把 MapReduce 程序当做一个普通的 java 程序来运行, 只是调用了 hadoop 相关的类而已,
+但是这样有缺陷, 因为没有配置 hadoop 环境, 没有使用到 hdfs, 运行的 MapReduce 是无法查看 split 等相关信息的,
+也无法通过配置进行远程提交 MapReduce 程序.
+
+Notice: 主要需要注意的地方为 hadoop.dll 等文件版本不对应时, 高版本可以兼容低版,  还有就是不需要添加  hadoop-core 依赖.

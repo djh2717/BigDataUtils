@@ -1,0 +1,35 @@
+help Command    Command --help     info Command    查看命令帮助
+
+wget    下载
+
+sudo    以管理员的身份临时执行
+
+su(Switch User)      切换用户
+
+rm      删除文件或目录
+
+route   查看IP路由
+
+chkconfig iptables off      永久关闭防火墙
+chkconfig iptables --list   查看防火墙状态
+
+chmod       更改文件或文件夹权限
+
+
+查看并卸载自带 JDK:
+rpm -qa | grep java
+yum -y remove  JDKVersion
+
+
+tar -zxvf   解压
+
+scp LocalFile root@hadoop2-host:/home/otherFiles        远程拷贝
+
+
+date        查看当前系统时间
+
+date -s 2009-05-07      修改日期,将日期设定成2009年5月7日
+
+date -s 20:18:00        修改时间,将时间设定成下午8点18分0秒
+
+clock -w                同步BIOS时钟,强制把系统时间写入CMOS

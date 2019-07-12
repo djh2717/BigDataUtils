@@ -1,0 +1,3 @@
+hadoop fs -lsr /        递归查看Hadoop文件系统的目录.
+
+hadoop-daemon.sh stop datanode     启动或关闭 DataNode/NameNode 此命令可用于在某一个节点上启动或关闭相应的守护进程

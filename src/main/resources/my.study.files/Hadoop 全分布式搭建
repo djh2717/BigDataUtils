@@ -1,0 +1,47 @@
+第一步:
+从一台空白的虚拟机(只配好了 java 环境和 hadoop 环境)克隆出第一台 hadoop 集群.
+
+
+第二步: 集群规划
+在第一台上做好集群规划, 选定哪台作为 NameNode, ResourcesManager 等消耗资源的节点, 修改好四个配置文件,
+修改 hadoop-env.sh , 配置 JavaHome.
+修改 yarn-env.sh ,  配置 JavaHome.
+修改 mapred-env.sh , 配置 JavaHome.
+修改 Slaves, 添加所有的 DataNode 的主机名.
+
+
+
+第三步:(每一台都需要重复这个过程)
+查看并修改两个网络配置文件, 改成静态 IP, 克隆后的虚拟机需要删除多余的 eht0,eth1 等网卡, 只保留最后一个, 并把名字改为 eth0, 并复制物理地址到 eth0 网卡配置文件中.
+修改 /etc/sysconfig/network 中的主机名
+修改 /etc/hosts 文件进行主机名到 IP 的映射
+
+
+第四步:
+给 NameNode, ResourcesManager 等节点免密登录, cd 到 /.ssh 目录下(如果没有, 用ssh登录一次别的服务器即可), 输入免密命令回车四次生成公钥.
+把公钥复制到需要免密登录的节点上.
+Notice: 记得免密登录自己.
+
+
+第五步: 集群时间同步
+1:查看是否安装了  ntp  服务,  选择一台服务器作为时间同步的服务器.
+    rpm -qa | grep ntp
+2: 修改ntp.conf配置文件（/etc/ntp.conf）
+    取消注释   restrict  192.168 ........   开头的注释.
+3: 注释官方提供的时间服务.
+4: 添加默认内部时间数据.
+
+
+第六步: 格式化
+在 NameNode 部署的节点格式化:  hdfs namenode -format
+Notice: 只有第一次启动集群才需要这一步.
+
+
+第七步: 启动集群
+在 NameNode 部署的节点启动 dfs:  start-dfs.sh
+在 ResourcesManager 部署的节点启动 yarn: start-yarn.sh
+在 HistoryServer 部署的节点启动 HistoryServer:  mr-jobhistory-daemon.sh start historyserver
+Notice: 一定要在某个组件部署的节点启动相应的组件
+
+
+JPS 查看进程.
