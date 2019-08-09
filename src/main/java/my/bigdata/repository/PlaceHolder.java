@@ -1,4 +1,4 @@
-package my.repository;
+package my.bigdata.repository;
 
 /**
  * @author djh on  2019/7/12 15:58

@@ -1,4 +1,4 @@
-package my.repository.utils;
+package my.bigdata.repository.utils.hadoop;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;

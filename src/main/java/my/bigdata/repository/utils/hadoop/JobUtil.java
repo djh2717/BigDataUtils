@@ -1,4 +1,4 @@
-package my.repository.utils;
+package my.bigdata.repository.utils.hadoop;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapreduce.Job;
