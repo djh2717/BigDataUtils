@@ -1,8 +1,8 @@
 交互命令:
   1.jdbc
     启动hiveserver2服务端:
-    bin/hive --service hiveserver2  前台启动
-    nohup bin/hive --service hiveserver2 2>&1   &  进程后台启动
+    hive --service hiveserver2  前台启动
+    nohup hive --service hiveserver2 2>&1   &  进程后台启动
     然后使用 beeline 连接: !connect jdbc:hive2://hadoop1-host:10000
 
   2.直接使用 hive -e "SQL" 或者 hive -f fileName.sql 来执行命令或 SQL 文件.
@@ -10,6 +10,22 @@
 
 创建数据库: create database name;
 
+开启分筒表: set hive.enforce.bucketing=true;
 
-建表语句:
-  CREATE [EXTERNAL] TABLE [IF NOT EXISTS] table_name
+查看表信息: desc tableName;
+
+查看数据库信息: desc database databaseName;
+
+改表名: alter table olderName rename to newName;
+
+添加列: alter table tableName add columns(newColumn string, newColumn2 int);
+
+更改列: alter table tableName change column oldColumnName newColumnName int;
+
+删除表: drop table tableName;
+
+复制表结构: create table tableName like tableNameTwo;
+
+清空管理表: truncate table score6;
+
+查看函数信息： desc function extended upper;

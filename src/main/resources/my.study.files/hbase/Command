@@ -1,0 +1,16 @@
+http://hadoop1-host:16010       web页面端口
+
+start-hbase.sh      启动命令(在master上启动)
+
+hbase shell     进入hbase客户端,进行crud
+
+help create     查看crud命令帮助
+
+list    查看表
+
+desc 'tableName'    查看表结构
+
+scan 'tableName'    全表扫描
+get  'tableName', 'rowKey'  获取某一行
+
+deleteall 'tableName', 'rowKey'         删除某一行全部数据

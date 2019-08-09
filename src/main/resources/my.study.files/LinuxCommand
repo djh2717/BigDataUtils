@@ -16,6 +16,21 @@ chkconfig iptables --list   查看防火墙状态
 chmod       更改文件或文件夹权限
 
 
+cat /etc/shells     查看有哪些 shell 终端
+安装 zsh:     yum install -y zsh
+查看 zsh版本: zsh --version
+切换到 zsh: chsh -s /bin/zsh  重启生效
+查看使用的 shell 交互方式:    echo $SHELL
+到此, zsh 安装完毕, 还需要安装 oh-my-zsh(类似配置文件).
+使用 git 安装 oh-my-zsh: (安装 git:  yum install git)
+git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
+cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc (更改文件名)
+
+
+
+
+
+
 查看并卸载自带 JDK:
 rpm -qa | grep java
 yum -y remove  JDKVersion

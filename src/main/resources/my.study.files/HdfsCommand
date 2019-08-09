@@ -1,3 +1,4 @@
+start-dfs.sh        启动命令
 
 hdfs dfs -mkdir -p  /dir    创建目录
 
@@ -8,6 +9,7 @@ hdfs dfs -rm -rf   /hdfsDir     删除文件
 hdfs dfs -cat /hdfsFile     查看文件
 
 hdfs fsck / -files -blocks  查看文件由哪些块组成
+
 
 
 以 hadoop 开头的:  hadoop fs 和 hdfs dfs 之间的关系为, hadoop fs 底层是用 hdfs dfs 来实现的
@@ -32,4 +34,3 @@ hdfs oiv/oev -p XML -i镜像文件 -o 转换后文件输出路径        以 XML
 hdfs dfsadmin -safemode get/enter/leave/wait    查看/进入/离开/等待  安全模式
 
 Notice: 第一次格式化启动后, 如果后续又要格式化, 需要删除 NameNode 的 data(即配置的工作目录) 目录, 原因是版本信息不对应.
-

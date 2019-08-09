@@ -1,0 +1,70 @@
+{
+  "setting": {},
+  "job": {
+    "setting": {
+      "speed": {
+        "channel": 2
+      }
+    },
+    "content": [
+      {
+        "reader": {
+          "name": "txtfilereader",
+          "parameter": {
+            "path": [
+              "/home/datax/testData.txt"
+            ],
+            "encoding": "UTF-8",
+            "column": [
+              {
+                "index": 0,
+                "type": "string"
+              },
+              {
+                "index": 1,
+                "type": "string"
+              },
+              {
+                "index": 2,
+                "type": "string"
+              },
+              {
+                "index": 3,
+                "type": "string"
+              }
+            ],
+            "fieldDelimiter": "\t"
+          }
+        },
+        "writer": {
+          "name": "mysqlwriter",
+          "parameter": {
+            "writeMode": "insert",
+            "username": "root",
+            "password": "123456",
+            "column": [
+              "phoneNumber",
+              "startTime",
+              "endTime",
+              "url"
+            ],
+            "session": [
+              "set session sql_mode='ANSI'"
+            ],
+            "preSql": [
+              "delete from dataXTestTable"
+            ],
+            "connection": [
+              {
+                "jdbcUrl": "jdbc:mysql://127.0.0.1:3306/myDatabase?useUnicode=true&characterEncoding=gbk",
+                "table": [
+                  "dataXTestTable"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+查看 MySQL 运行状态:
+    ps -ef|grep mysqld      看看是否有mysqld_safe 和mysqld进程
+    如果已添加到系统服务中，可以  service mysqld status
+
+配置开机启动:
+    1: 查看是否配置为服务,   chkconfig --list(显示服务列表)
+    2: 将 345 项设置成 on,   chkconfig --level 345 mysqld on
+
+连接后查看版本信息:
+    status;
+
+登录 MySQL 服务:
+     mysql -u root -h hadoop1-host -p

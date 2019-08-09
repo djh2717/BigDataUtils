@@ -1,5 +1,5 @@
 #!/bin/bash
-#1 获取输入参数个数，如果没有参数，直接退出
+#1  获取输入参数个数，如果没有参数，直接退出
 pcount=$#
 if((pcount==0)); then
 echo no args;
@@ -19,7 +19,7 @@ echo pdir=$pdir
 user=`whoami`
 
 #5 循环
-for((num=2; num<=4; num++)); do
+for((num=2; num<4; num++)); do
         echo ------------------- hadoop$num-host --------------
         rsync -rvl $pdir/$fname $user@hadoop$num-host:$pdir
 done

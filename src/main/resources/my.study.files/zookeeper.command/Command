@@ -1,0 +1,7 @@
+zkServer.sh         查看可用命令
+
+zkServer.sh start       启动命令
+
+zkCli.sh        启动客户端命令
+#客户端中的命令
+help    显示全部命令

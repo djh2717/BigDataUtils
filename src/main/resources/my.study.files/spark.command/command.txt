@@ -1,0 +1,21 @@
+要在 sbin/目录下执行, 没有配环境变量,有冲突
+
+./sbin/start-all.sh     启动所有组件, 在master 上执行.
+
+./sbin/start-master.sh      启动maser进程
+
+
+运行 spark 程序:
+部署模式中的 client 和 cluster 的区别是在于 driver 提交到哪, 如果为client,直接提交在连接的那个节点,
+然后集群的日志打印需要传输到 client,要消耗网络带宽.
+./bin/spark-submit \
+		  --class org.apache.spark.examples.SparkPi \
+		  --master spark://hadoop1-host:7077 \
+		  --deploy-mode cluster \
+		  --executor-memory 1G \
+		  --total-executor-cores 4 \
+		  examples/jars/spark-examples_2.11-2.2.0.jar \
+		  10
+
+
+
